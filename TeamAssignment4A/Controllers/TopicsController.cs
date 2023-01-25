@@ -17,8 +17,7 @@ namespace TeamAssignment4A.Controllers
     public class TopicsController : Controller
     {
         private readonly WebAppDbContext _db;
-        private readonly TopicService _service;        
-        private readonly IMapper _mapper;
+        private readonly TopicService _service;       
 
         public TopicsController(WebAppDbContext context, TopicService service)
         {
