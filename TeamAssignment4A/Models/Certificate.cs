@@ -8,16 +8,18 @@ namespace TeamAssignment4A.Models
 {
     public class Certificate {
         //Basic Info for Certificate
-        [Key]
-        [Required]
+
+        
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Display(Name = "Certificate Id")]
         public int Id { get; set; }
 
-        [Required]
+        
         [StringLength(20)]
         [Display(Name = "Title Of Certificate")]
         public string TitleOfCertificate { get; set; }
 
+        //public (int, string) CompositeKey => (Id, TitleOfCertificate);
         [Required]        
         [Display(Name = "Passing Grade")]
         public int PassingGrade { get; set; }

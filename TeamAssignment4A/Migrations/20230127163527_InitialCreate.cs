@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace TeamAssignment4A.Migrations
 {
-    public partial class Initial_Create : Migration
+    public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -65,7 +65,7 @@ namespace TeamAssignment4A.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Certificates", x => x.Id);
+                    table.PrimaryKey("PK_Certificates", x => new { x.Id, x.TitleOfCertificate });
                 });
 
             migrationBuilder.CreateTable(
@@ -134,6 +134,7 @@ namespace TeamAssignment4A.Migrations
                     PercentageScore = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     AssessmentResultLabel = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CertificateId = table.Column<int>(type: "int", nullable: false),
+                    CertificateTitleOfCertificate = table.Column<string>(type: "nvarchar(20)", nullable: false),
                     CandidateId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -146,10 +147,10 @@ namespace TeamAssignment4A.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Exams_Certificates_CertificateId",
-                        column: x => x.CertificateId,
+                        name: "FK_Exams_Certificates_CertificateId_CertificateTitleOfCertificate",
+                        columns: x => new { x.CertificateId, x.CertificateTitleOfCertificate },
                         principalTable: "Certificates",
-                        principalColumn: "Id",
+                        principalColumns: new[] { "Id", "TitleOfCertificate" },
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -161,16 +162,17 @@ namespace TeamAssignment4A.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     NumberOfPossibleMarks = table.Column<int>(type: "int", nullable: false),
-                    CertificateId = table.Column<int>(type: "int", nullable: false)
+                    CertificateId = table.Column<int>(type: "int", nullable: false),
+                    CertificateTitleOfCertificate = table.Column<string>(type: "nvarchar(20)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Topics", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Topics_Certificates_CertificateId",
-                        column: x => x.CertificateId,
+                        name: "FK_Topics_Certificates_CertificateId_CertificateTitleOfCertificate",
+                        columns: x => new { x.CertificateId, x.CertificateTitleOfCertificate },
                         principalTable: "Certificates",
-                        principalColumn: "Id",
+                        principalColumns: new[] { "Id", "TitleOfCertificate" },
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -297,14 +299,14 @@ namespace TeamAssignment4A.Migrations
                     OptionC = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     OptionD = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CorrectAnswer = table.Column<string>(type: "nvarchar(1)", nullable: false),
-                    TopicID = table.Column<int>(type: "int", nullable: false)
+                    TopicId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Stems", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Stems_Topics_TopicID",
-                        column: x => x.TopicID,
+                        name: "FK_Stems_Topics_TopicId",
+                        column: x => x.TopicId,
                         principalTable: "Topics",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -393,14 +395,20 @@ namespace TeamAssignment4A.Migrations
                 column: "ExamId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Certificates_TitleOfCertificate",
+                table: "Certificates",
+                column: "TitleOfCertificate",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Exams_CandidateId",
                 table: "Exams",
                 column: "CandidateId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Exams_CertificateId",
+                name: "IX_Exams_CertificateId_CertificateTitleOfCertificate",
                 table: "Exams",
-                column: "CertificateId");
+                columns: new[] { "CertificateId", "CertificateTitleOfCertificate" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_ExamStems_ExamId",
@@ -413,14 +421,14 @@ namespace TeamAssignment4A.Migrations
                 column: "StemId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Stems_TopicID",
+                name: "IX_Stems_TopicId",
                 table: "Stems",
-                column: "TopicID");
+                column: "TopicId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Topics_CertificateId",
+                name: "IX_Topics_CertificateId_CertificateTitleOfCertificate",
                 table: "Topics",
-                column: "CertificateId");
+                columns: new[] { "CertificateId", "CertificateTitleOfCertificate" });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
